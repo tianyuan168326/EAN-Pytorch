@@ -120,6 +120,8 @@ class VideoDataSet(data.Dataset):
                 offsets = np.zeros((self.num_segments,))
             return offsets + 1
     def _get_val_indices(self, record):
+        # print("_get_val_indices")
+        # exit()
         """Sampling for validation set
         Sample the middle frame from each video segment
         """
@@ -185,9 +187,22 @@ class VideoDataSet(data.Dataset):
             return np.array(offsets) + 1
         ### TSN
         tick = (record.num_frames - self.new_length + 1) / float(self.num_segments)
-
         if self.num_clips == 1:
             offsets = np.array([int(tick / 2.0 + tick * x) for x in range(self.num_segments)]) + 1
+            # if record.num_frames > self.num_segments + self.new_length - 1:
+            #     tick = (record.num_frames - self.new_length + 1) / float(self.num_segments)
+            #     offsets = np.array([int(tick / 2.0 + tick * x) for x in range(self.num_segments)])
+            # elif record.num_frames > self.num_segments:
+            #     offsets = list(range(self.num_segments))
+            #     # offsets_padding = np.zeros((self.num_segments - record.num_frames,)).tolist()
+            #     # offsets = offsets_padding+offsets
+            #     offsets = np.array(offsets)
+            # else:
+            #     offsets = list(range(record.num_frames))
+            #     offsets_padding = np.zeros((self.num_segments - record.num_frames,)).tolist()
+            #     offsets = offsets_padding+offsets
+            #     offsets = np.array(offsets)
+            # offsets = np.array(offsets) + 1
 
         elif self.num_clips == 2:
             offsets = [np.array([int(tick * x) for x in range(self.num_segments)])+1,
@@ -203,7 +218,6 @@ class VideoDataSet(data.Dataset):
                            np.array([int(tick * x + tick*3.0 / 5.0) for x in range(self.num_segments)]) + 1,
                            np.array([int(tick * x + tick*4.0 / 5.0) for x in range(self.num_segments)]) + 1,
                            ]
-
         return offsets
 
     def __getitem__(self, index):

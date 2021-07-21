@@ -37,25 +37,10 @@ class TemporalModel(nn.Module):
 		
 
 	def _prepare_base_model(self, model, backbone):
-		if model == 'GST':
-			import GST
-			self.base_model = getattr(GST,backbone)(alpha = self.alpha, beta = self.beta)
-		if model == 'STCeption':
-			import STCeption
-			self.base_model = getattr(STCeption,backbone)(alpha = self.alpha, beta = self.beta)
-		if model == 'STCeption_Reg':
-			import STCeption_Reg
-			self.base_model = getattr(STCeption_Reg,backbone)(alpha = self.alpha, beta = self.beta)
-		elif model == 'C3D':
-			import C3D
-			self.base_model = getattr(C3D,backbone)()
-		elif model == 'S3D':
-			import S3D
-			self.base_model = getattr(S3D,backbone)()
-		else:
-			import importlib
-			lib = importlib.import_module(model)
-			self.base_model = getattr(lib,backbone)(alpha = self.alpha, beta = self.beta)
+		
+		import importlib
+		lib = importlib.import_module(model)
+		self.base_model = getattr(lib,backbone)(num_segments =self.num_segments ,alpha = self.alpha, beta = self.beta)
 			# raise ValueError('Unknown model: {}'.format(model))
 		
 		if 'resnet' in backbone:

@@ -133,18 +133,19 @@ from transforms import *
 test_ds = VideoDataSet(root_path, val_list, num_segments=args.num_segments,
 				   image_tmpl=prefix,new_length=new_length,
 				   random_shift=False,
+                   test_mode = True,
 				   transform=torchvision.transforms.Compose([
 					GroupScale(int(scale_size)),
 					   GroupCenterCrop(crop_size),
 					   Stack(roll=(args.arch in ['BNInception','InceptionV3'])),
 					   ToTorchFormatTensor(div=(args.arch not in ['BNInception','InceptionV3'])),
 					#    normalize,
-				   ]))
+				   ]),num_clips = args.num_clips)
 
 data_loader = torch.utils.data.DataLoader(
         test_ds,
         batch_size=1, shuffle=False,
-        num_workers=8, pin_memory=True)
+        num_workers=8, pin_memory=False)
 
 devices = [0]
 net.eval()
@@ -156,14 +157,6 @@ def eval_video(video_data):
     i, data, label = video_data
     num_crop = args.test_crops
 
-    # if args.modality == 'RGB':
-    #     length = 3
-    # elif args.modality == 'Flow':
-    #     length = 10
-    # elif args.modality == 'RGBDiff':
-    #     length = 18
-    # else:
-    #     raise ValueError("Unknown modality "+args.modality)
     if args.num_clips > 1:
         input_var = data.view(-1, 3, data.size(3), data.size(4))
     else:
@@ -212,7 +205,7 @@ cls_acc = cls_hit / cls_cnt
 print('-----Evaluation of {} is finished------'.format(args.resume))
 print('Overall Prec@1 {:.02f}% Prec@5 {:.02f}%'.format(top1.avg, top5.avg))
 
-if False:
+if True:
 
     # order_dict = {e:i for i, e in enumerate(sorted(name_list))}
     reorder_output = [None] * len(output)

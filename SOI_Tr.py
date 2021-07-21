@@ -113,7 +113,7 @@ MAX_NUM = 4
 class SparseTransformer(nn.Module):
 	expansion = 1
 
-	def __init__(self,input_c = 2048, down_ratio = 4, obj_down_ratio = 4):
+	def __init__(self,input_c = 2048, seg_num = 8, down_ratio = 4, obj_down_ratio = 4):
 		super(SparseTransformer, self).__init__()
 		ft_c = input_c//down_ratio
 		obj_ft_c =ft_c//obj_down_ratio
@@ -133,7 +133,7 @@ class SparseTransformer(nn.Module):
 
 			nn.Conv3d(obj_ft_c,MAX_NUM,(1,3,3),1,(0,1,1)),
 		)
-		patch_num = 8*7*7
+		patch_num = seg_num*7*7
 		# self.pos_embedding = 
 		# self.register_parameter("pos_embedding",nn.Parameter(torch.randn()))
 		self.register_parameter("pos_embedding",torch.nn.Parameter(torch.FloatTensor(ft_c,patch_num)))
