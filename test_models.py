@@ -129,7 +129,7 @@ input_mean = net_o.input_mean
 input_std = net_o.input_std
 new_length = 5
 from transforms import *
-# normalize = GroupNormalize(input_mean, input_std)
+normalize = GroupNormalize(input_mean, input_std)
 test_ds = VideoDataSet(root_path, val_list, num_segments=args.num_segments,
 				   image_tmpl=prefix,new_length=new_length,
 				   random_shift=False,
@@ -139,7 +139,7 @@ test_ds = VideoDataSet(root_path, val_list, num_segments=args.num_segments,
 					   GroupCenterCrop(crop_size),
 					   Stack(roll=(args.arch in ['BNInception','InceptionV3'])),
 					   ToTorchFormatTensor(div=(args.arch not in ['BNInception','InceptionV3'])),
-					#    normalize,
+					   normalize,
 				   ]),num_clips = args.num_clips)
 
 data_loader = torch.utils.data.DataLoader(

@@ -71,8 +71,8 @@ class TemporalModel(nn.Module):
 		if True:
 			b,c,t,h,w = src_input.size()### srouces
 			
-			video_input = self.norm_video(src_input)
-			# video_input = src_input
+			# video_input = self.norm_video(src_input)
+			video_input = src_input
 			video_input = video_input.transpose(1,2).reshape(b*t,c,h,w)
 			base_out,vis = self.base_model(video_input)
 			base_out = base_out.squeeze()

@@ -111,7 +111,7 @@ def main():
 					   GroupCenterCrop(crop_size),
 					   Stack(roll=(args.arch in ['BNInception','InceptionV3'])),
 					   ToTorchFormatTensor(div=(args.arch not in ['BNInception','InceptionV3'])),
-					#    normalize,
+					   normalize,
 				   ]))
 	val_loader = torch.utils.data.DataLoader(
 		test_ds,

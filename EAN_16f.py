@@ -89,8 +89,9 @@ class BasicBlock(nn.Module):
 		self.remainder= remainder
 		self.num_segments = num_segments
 
-	def d2_to_d3(self,x,t):
+	def d2_to_d3(self,x):
 		bt,c,h,w = x.size()
+		t = 16
 		b = bt//t
 		return x.reshape(b,t,c,h,w).transpose(1,2)
 	def d3_to_d2(self,x):
@@ -160,7 +161,7 @@ class MEModule(nn.Module):
     :param reduction=16
     :param n_segment=8/16
     """
-    def __init__(self, channel, reduction=16, n_segment=8):
+    def __init__(self, channel, reduction=16, n_segment=16):
         super(MEModule, self).__init__()
         self.channel = channel
         self.reduction = reduction
@@ -242,7 +243,7 @@ class Bottleneck(nn.Module):
 		self.num_segments = num_segments
 		# self.t_conv = ShiftModule(planes, n_segment=8, n_div=2, mode='fixed')  
 		self.t_conv = ShiftModule(planes, n_segment=self.num_segments, n_div=8, mode='shift')   
-		self.me = MEModule(planes, reduction=16, n_segment=self.num_segments)
+		self.me = MEModule(planes, reduction=16, n_segment=16)
 
 	def forward(self, x):
 		identity = x  
@@ -273,7 +274,7 @@ class Bottleneck(nn.Module):
 
 
 from SOI_Tr import SparseTransformer	
-
+# from non_local_sparse import NLBlockND
 class ResNet(nn.Module):
 
 	def __init__(self, block, block2, layers, num_segments, flow_estimation, num_classes=1000, zero_init_residual=False):
@@ -293,7 +294,9 @@ class ResNet(nn.Module):
 		self.layer1 = self._make_layer(block, 64, layers[0], num_segments=num_segments)
 		self.layer2 = self._make_layer(block, 128, layers[1],  num_segments=num_segments, stride=2)
 		self.layer3 = self._make_layer(block, 256, layers[2],  num_segments=num_segments, stride=2)
-		self.layer4 = self._make_layer(block, 512, layers[3],  num_segments=num_segments, stride=2)       
+		self.layer4 = self._make_layer(block, 512, layers[3],  num_segments=num_segments, stride=2)  
+		
+
 		self.relation1 = STCeptionLayer_max(64,4)
 		self.relation2 = STCeptionLayer_max(64*block.expansion,4)
 		self.relation3 = STCeptionLayer_max(128*block.expansion,4)
@@ -338,6 +341,8 @@ class ResNet(nn.Module):
 			nn.BatchNorm2d(64),
 			nn.Conv2d(64,64,1,1,0),
 			nn.Conv2d(64,64,3,1,1,bias=False,groups=16),
+
+
 		)
 		self.proj_back = nn.Sequential(
 			nn.Conv3d(self.patch_dim,self.patch_dim,1,1,0,bias=False),
@@ -372,7 +377,8 @@ class ResNet(nn.Module):
 			elif isinstance(m, nn.BatchNorm3d):
 				nn.init.constant_(m.weight, 1)
 				nn.init.constant_(m.bias, 0)
-
+		# self.register_parameter("fusion_weight",nn.Parameter(torch.zeros(1)))
+		# torch.nn.init.normal(self.fusion_weight)
 		# Zero-initialize the last BN in each residual branch,
 		# so that the residual branch starts with zeros, and each residual block behaves like an identity.
 		# This improves the model by 0.2~0.3% according to https://arxiv.org/abs/1706.02677
@@ -402,36 +408,38 @@ class ResNet(nn.Module):
 		return nn.Sequential(*layers)            
 	
 	
-	def d2_to_d3(self,x,t):
+	def d2_to_d3(self,x,t=16):
 		bt,c,h,w = x.size()
-		# t = 8
 		b = bt//t
 		return x.reshape(b,t,c,h,w).transpose(1,2)
 	def d3_to_d2(self,x):
 		b,c,t,h,w = x.size()
 		return x.transpose(1,2).reshape(b*t,c,h,w)
-	def forward(self, x):
-		x_t = self.d2_to_d3(x,self.num_segments*5) ### b c 40 h w
+	def forward(self, x, temperature=0):
+		x_t = self.d2_to_d3(x,t=80) ### b c 40 h w
 		b,c,l,h,w = x_t.size()
-		x_flatten = x_t.reshape(b,c,self.num_segments,5,h,w)
+		x_flatten = x_t.reshape(b,c,16,5,h,w)
 		x = x_flatten[:,:,:,2] ## mid frames
 
-		x_short_clip = x_flatten.permute(0,2,1,3,4,5).reshape(b*self.num_segments,c,5,h,w)
+		x_short_clip = x_flatten.permute(0,2,1,3,4,5).reshape(b*16,c,5,h,w)
+		# x_short_clip_down_sample = F.upsample(x_short_clip,scale_factor= (1,0.5,0.5),mode='trilinear')
 		x_short_clip_down_sample = F.upsample(x_short_clip,scale_factor= (1,0.5,0.5))
 
 		x_short_clip_down_sample = x_short_clip_down_sample[:,:,1:5] - x_short_clip_down_sample[:,:,0:4]
-		x_short_clip_stack = x_short_clip_down_sample.reshape(b*self.num_segments,12,112,112)
+		x_short_clip_stack = x_short_clip_down_sample.reshape(b*16,12,112,112)
 		x_short_clip_stack = self.stack_diff_motion(x_short_clip_stack)
-		x_short_clip_stack = x_short_clip_stack.reshape(b,self.num_segments,64,56,56).transpose(1,2)
+		x_short_clip_stack = x_short_clip_stack.reshape(b,16,64,56,56).transpose(1,2)
+
 		X_patches = rearrange(x_short_clip_down_sample,"b c t (h p1) (w p2) -> b (p1 p2 c) t h w",p1 = self.p1,p2 = self.p2)
 		x_features = self.stm_proj1(X_patches)
 		
 		x_features = x_features+self.stm_st_model1(x_features)
 		x_features = x_features+self.stm_st_model2(x_features)
 		x_patches = self.proj_back(x_features)
-
 		X_patches = rearrange(x_patches,"b (p1 p2 c) t h w -> b c t (h p1) (w p2)",c = 16,p1 = 8,p2 = 8)
-		x_res = X_patches.reshape(-1,self.num_segments,4*16,56,56).transpose(1,2)
+		# print(X_patches.size())
+		# exit()
+		x_res = X_patches.reshape(b,16,4*16,56,56).transpose(1,2)
 
 		x = self.d3_to_d2(x)
 		input = x
@@ -440,42 +448,44 @@ class ResNet(nn.Module):
 		x = self.bn1(x)
 		x = self.relu(x)
 		x = self.maxpool(x)
-		x = self.d2_to_d3(x,self.num_segments)
+		x = self.d2_to_d3(x)
+		# w = 0.75
 		x =0.6*x+ 0.2* x_res + 0.2*x_short_clip_stack
 		x,_,matrix1 = self.relation1(x)
 		x = self.d3_to_d2(x)
 
 		x = self.layer1(x)   
-		x = self.d2_to_d3(x,self.num_segments)
+		x = self.d2_to_d3(x)
 		x,_,matrix2 = self.relation2(x)
 		x = self.d3_to_d2(x)                       
 		x = self.layer2(x) 
-		x = self.d2_to_d3(x,self.num_segments)
+		x = self.d2_to_d3(x)
 		x,_,matrix3 = self.relation3(x)
 		x = self.d3_to_d2(x)       
 		
 		
 		x = self.layer3(x)  
-		x = self.d2_to_d3(x,self.num_segments)
+		x = self.d2_to_d3(x)
 		x,_,matrix4 = self.relation4(x)
 		x = self.d3_to_d2(x) 
 
 		x = self.layer4(x)
-		x_d3 = self.d2_to_d3(x,self.num_segments)
+		x_d3 = self.d2_to_d3(x)
 		# feature_from_transformer = x_d3.mean(-1).mean(-1).mean(-1)
 
 		feature_from_transformer,x_score = self.sparse_transformer(x_d3)
 		
 		x_out = feature_from_transformer 
 		# print(feature_from_transformer.size(),x.size(),"fuck")		   
-		x = self.fc(x_out)      
-		return x, {
-			'matrix1':matrix1,
-			'matrix2':matrix2,
-			'matrix3':matrix3,
-			'matrix4':matrix4,
-			'input':self.d2_to_d3(input,self.num_segments)
-		}
+		x = self.fc(x_out)     
+		return x,None
+		# return x, {
+		# 	'matrix1':matrix1,
+		# 	'matrix2':matrix2,
+		# 	'matrix3':matrix3,
+		# 	'matrix4':matrix4,
+		# 	'input':self.d2_to_d3(input)
+		# }
 
 
 def resnet18(pretrained=True, shift='TSM',num_segments = 8, flow_estimation=0,alpha=0,beta=0, **kwargs):
@@ -514,7 +524,7 @@ def resnet34(pretrained=False, shift='TSM',num_segments = 8, flow_estimation=0,*
 	return model
 
 
-def resnet50(pretrained=True, shift='TSM',num_segments = 8, flow_estimation=0,alpha=0,beta=0, **kwargs):
+def resnet50(pretrained=True, shift='TSM',num_segments = 16, flow_estimation=0,alpha=0,beta=0, **kwargs):
 	"""Constructs a ResNet-50 model.
 	Args:
 		pretrained (bool): If True, returns a model pre-trained on ImageNet

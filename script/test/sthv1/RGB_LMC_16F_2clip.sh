@@ -1,4 +1,4 @@
-CUDA_VISIBLE_DEVICES=3 python ./test_models.py \
+CUDA_VISIBLE_DEVICES=9 python ./test_models.py \
 --fp 32 --lr 0.01 -b 1 -j 4 \
 --root_path ./ --dataset somethingv1 \
 --type EAN_16f \
