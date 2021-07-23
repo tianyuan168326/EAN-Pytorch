@@ -1,7 +1,7 @@
 # EAN: Event Adaptive Network
 
-<!-- [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-something-1)](https://paperswithcode.com/sota/action-recognition-in-videos-on-something-1?p=pan-towards-fast-action-recognition-via)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-something)](https://paperswithcode.com/sota/action-recognition-in-videos-on-something?p=pan-towards-fast-action-recognition-via)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ean-event-adaptive-network-for-enhanced/action-recognition-in-videos-on-something-1)](https://paperswithcode.com/sota/action-recognition-in-videos-on-something-1?p=ean-event-adaptive-network-for-enhanced)
+<!-- [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-something)](https://paperswithcode.com/sota/action-recognition-in-videos-on-something?p=pan-towards-fast-action-recognition-via)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-jester)](https://paperswithcode.com/sota/action-recognition-in-videos-on-jester?p=pan-towards-fast-action-recognition-via) -->
 
 PyTorch Implementation of paper:
