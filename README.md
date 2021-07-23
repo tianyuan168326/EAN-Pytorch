@@ -10,7 +10,7 @@ PyTorch Implementation of paper:
 >
 > Yuan Tian, Yichao Yan, Xiongkuo Min, Guo Lu, Guangtao Zhai, Guodong Guo, and Zhiyong Gao
 >
-<!-- > [[ArXiv](https://arxiv.org/abs/2008.03462)] -->
+> [[ArXiv](https://arxiv.org/abs/2107.10771)]
 
 <!-- ## Updates -->
 <!-- 
@@ -176,18 +176,17 @@ This repository is built upon the following baseline implementations for the act
 ### Citation
 
 Please **[★star]** this repo and **[cite]** the following arXiv paper if you feel our EAN useful to your research:
-<!-- 
+
 ```
-@misc{
-    zhang2020pan,
-    title={PAN: Towards Fast Action Recognition via Learning Persistence of Appearance},
-    author={Can Zhang and Yuexian Zou and Guang Chen and Lei Gan},
-    year={2020},
-    eprint={2008.03462},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV}
+@misc{tian2021ean,
+      title={EAN: Event Adaptive Network for Enhanced Action Recognition}, 
+      author={Yuan Tian and Yichao Yan and Xiongkuo Min and Guo Lu and Guangtao Zhai and Guodong Guo and Zhiyong Gao},
+      year={2021},
+      eprint={2107.10771},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
-``` -->
+```
 
 
 ### Contact
