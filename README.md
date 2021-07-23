@@ -12,10 +12,6 @@ PyTorch Implementation of paper:
 >
 > [[ArXiv](https://arxiv.org/abs/2107.10771)]
 
-<!-- ## Updates -->
-<!-- 
-**[12 Aug 2020]** We have released the codebase and models of the PAN.  -->
-
 ## Main Contribution
 
 Efficiently modeling spatial-temporal information in videos is crucial for action recognition.
@@ -32,10 +28,6 @@ within local segments, we propose a novel and efficient Latent
 Motion Code (LMC) module, further improving the performance
 of the framework.
 
-<!-- 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/32992487/89706349-56563200-d997-11ea-8ed6-4ceca2883bad.gif" />
-</p> -->
 
 ## Content
 
@@ -128,6 +120,12 @@ To be release -->
 <td align="center">111G</td>
 <td align="center">57.2</td>
 <td align="center">83.9</td>
+</tr>
+<tr>
+<td align="center">EAN<sub>2 x (16+8)(RGB+LMC)</sub></td>
+<td align="center">222G</td>
+<td align="center">57.5</td>
+<td align="center">84.3</td>
 </tr>
 <!-- <tr>
 <td align="center">PAN<sub>En</sub></td>
