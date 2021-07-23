@@ -109,8 +109,8 @@ Here, we provide the pretrained models of EAN models on Something-Something-V1 d
 <td align="center">EAN<sub>8F(RGB+LMC)</sub></td>
 <td align="center" rowspan="3">ResNet-50</td>
 <td align="center">37G</td>
-<td align="center">53.2</td>
-<td align="center">81.4</td>
+<td align="center">53.4</td>
+<td align="center">81.1</td>
 <td align="center" rowspan="3">
 [<a href="https://www.jianguoyun.com/p/DQ75LqkQ_vLOBhjx4IEE ">Jianguo Cloud</a>] 
 <!-- or [<a href="https://share.weiyun.com/F2PJnUiE" rel="nofollow">Weiyun</a>]
@@ -120,8 +120,14 @@ To be release -->
 <tr>
 <td align="center">EAN<sub>16(RGB+LMC)</sub></td>
 <td align="center">74G</td>
-<td align="center">54.6</td>
-<td align="center">82.9</td>
+<td align="center">54.7</td>
+<td align="center">82.3</td>
+</tr>
+<tr>
+<td align="center">EAN<sub>16+8(RGB+LMC)</sub></td>
+<td align="center">111G</td>
+<td align="center">57.2</td>
+<td align="center">83.9</td>
 </tr>
 <!-- <tr>
 <td align="center">PAN<sub>En</sub></td>
