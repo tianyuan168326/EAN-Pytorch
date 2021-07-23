@@ -99,7 +99,7 @@ Here, we provide the pretrained models of EAN models on Something-Something-V1 d
 <tbody>
 <tr>
 <td align="center">EAN<sub>8F(RGB+LMC)</sub></td>
-<td align="center" rowspan="3">ResNet-50</td>
+<td align="center" rowspan="4">ResNet-50</td>
 <td align="center">37G</td>
 <td align="center">53.4</td>
 <td align="center">81.1</td>
