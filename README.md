@@ -4,13 +4,14 @@
 <!-- [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-something)](https://paperswithcode.com/sota/action-recognition-in-videos-on-something?p=pan-towards-fast-action-recognition-via)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pan-towards-fast-action-recognition-via/action-recognition-in-videos-on-jester)](https://paperswithcode.com/sota/action-recognition-in-videos-on-jester?p=pan-towards-fast-action-recognition-via) -->
 
-PyTorch Implementation of paper:
+PyTorch Implementation of our IJCV paper:
 
 > **EAN: Event Adaptive Network for Enhanced Action Recognition**
 >
 > Yuan Tian, Yichao Yan, Xiongkuo Min, Guo Lu, Guangtao Zhai, Guodong Guo, and Zhiyong Gao
->
+> [[IJCV](https://link.springer.com/article/10.1007/s11263-022-01661-1)]
 > [[ArXiv](https://arxiv.org/abs/2107.10771)]
+
 
 ## Main Contribution
 
@@ -103,7 +104,7 @@ Here, we provide the pretrained models of EAN models on Something-Something-V1 d
 <td align="center">37G</td>
 <td align="center">53.4</td>
 <td align="center">81.1</td>
-<td align="center" rowspan="3">
+<td align="center" rowspan="4">
 [<a href="https://www.jianguoyun.com/p/DQ75LqkQ_vLOBhjx4IEE ">Jianguo Cloud</a>] 
 <!-- or [<a href="https://share.weiyun.com/F2PJnUiE" rel="nofollow">Weiyun</a>]
 To be release -->
@@ -176,13 +177,15 @@ This repository is built upon the following baseline implementations for the act
 Please **[★star]** this repo and **[cite]** the following arXiv paper if you feel our EAN useful to your research:
 
 ```
-@misc{tian2021ean,
-      title={EAN: Event Adaptive Network for Enhanced Action Recognition}, 
-      author={Yuan Tian and Yichao Yan and Xiongkuo Min and Guo Lu and Guangtao Zhai and Guodong Guo and Zhiyong Gao},
-      year={2021},
-      eprint={2107.10771},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{tian2022ean,
+  title={Ean: event adaptive network for enhanced action recognition},
+  author={Tian, Yuan and Yan, Yichao and Zhai, Guangtao and Guo, Guodong and Gao, Zhiyong},
+  journal={International Journal of Computer Vision},
+  volume={130},
+  number={10},
+  pages={2453--2471},
+  year={2022},
+  publisher={Springer}
 }
 ```
 
