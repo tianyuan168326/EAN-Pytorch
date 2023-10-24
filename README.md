@@ -8,7 +8,7 @@ PyTorch Implementation of our IJCV paper:
 
 > **EAN: Event Adaptive Network for Enhanced Action Recognition**
 >
-> Yuan Tian, Yichao Yan, Xiongkuo Min, Guo Lu, Guangtao Zhai, Guodong Guo, and Zhiyong Gao
+> Yuan Tian, Yichao Yan, Guangtao Zhai, Guodong Guo, and Zhiyong Gao
 > [[IJCV](https://link.springer.com/article/10.1007/s11263-022-01661-1)]
 > [[ArXiv](https://arxiv.org/abs/2107.10771)]
 
